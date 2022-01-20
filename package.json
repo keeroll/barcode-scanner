@@ -20,6 +20,8 @@
     "@angular/forms": "5.2.11",
     "@angular/platform-browser": "5.2.11",
     "@angular/platform-browser-dynamic": "5.2.11",
+    "@awesome-cordova-plugins/camera-preview": "^5.37.3",
+    "@awesome-cordova-plugins/core": "^5.37.3",
     "@ionic-native/core": "4.20.0",
     "@ionic-native/splash-screen": "4.20.0",
     "@ionic-native/status-bar": "4.20.0",
@@ -34,6 +36,7 @@
   "devDependencies": {
     "@ionic/app-scripts": "3.2.4",
     "CaptuvoCDV": "git+https://github.com/BlueFletch/cordova-plugin-honeywell-captuvo.git",
+    "cordova-plugin-camera-preview": "git+https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview.git",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
@@ -51,7 +54,8 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
-      "com.bluefletch.honeywell.captuvo": {}
+      "com.bluefletch.honeywell.captuvo": {},
+      "cordova-plugin-camera-preview": {}
     },
     "platforms": [
       "ios"

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { CameraPreview, CameraPreviewOptions } from '@awesome-cordova-plugins/camera-preview/ngx';
 
 declare let captuvo: any;
 
@@ -8,13 +9,29 @@ declare let captuvo: any;
     templateUrl: 'home.html'
 })
 export class HomePage {
-    public logString: string = "";
-    constructor(public navCtrl: NavController) {
+    public logString: string = "Empty";
 
-    }
+    public cameraPreviewOptions: CameraPreviewOptions = {
+        x: 0,
+        y: 0,
+        width: window.screen.width,
+        height: window.screen.height,
+        camera: 'rear',
+        tapPhoto: false,
+        previewDrag: false,
+        toBack: false,
+        alpha: 1,
+        tapFocus: false,
+        disableExifHeaderStripping: false
+    };
+
+    constructor(public navCtrl: NavController,
+        private cameraPreview: CameraPreview) { }
 
     public ngOnInit(): void {
-        document.addEventListener("deviceready", function() {
+        this.loadCameraPreview();
+
+        document.addEventListener("deviceready", function () {
             captuvo.registerScannerCallback(function (barcode) {
                 this.logString = `Barcode scanned: ${ barcode }`;
             });
@@ -23,21 +40,51 @@ export class HomePage {
                 //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
                 if (track.indexOf("%B") == 0) {
                     track = track.split('^');
-    
-                    var cc = {
+
+                    let cc = {
                         number: track[0].substr(2), //strip leading %B
                         name: track[1].trim(),
                         expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
                     };
-                } else {
-                    //handle track 2
+                    
+                    this.logString = `Magstripe event. Result: ${ cc }`;
                 }
-    
-            })
+
+            });
+
+            captuvo.startScanning(function (data) {
+                this.logString = data;
+            });
         });
 
-        document.addEventListener("magstripeReady", function() {
-            this.logString("MSR (or device) is ready");
+        document.addEventListener("magstripeReady", function () {
+            this.logString = "MSR (or device) is ready!";
         });
+
+        document.addEventListener("scannerReady", function () {
+            this.logString = "Barcode scanner is ready!";
+        });
+
+        document.addEventListener("captuvoConnected", function () {
+            this.logString = "Captuvo sled is connected!";
+
+            captuvo.registerBatteryCallback(function (data) {
+                this.logString = data;
+            });
+        });
+
+        document.addEventListener("captuvoDisconnected", function () {
+            this.logString = "Captuvo sled has been disconnected!";
+        });
+    }
+
+    private loadCameraPreview(): void {
+        this.cameraPreview.startCamera(this.cameraPreviewOptions).then(
+            (res) => {
+                console.log(res)
+            },
+            (err) => {
+                console.log(err)
+            });
     }
 }
