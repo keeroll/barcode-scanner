@@ -3,13 +3,14 @@ import { NavController } from 'ionic-angular';
 import { CameraPreview, CameraPreviewOptions } from '@awesome-cordova-plugins/camera-preview/ngx';
 
 declare let captuvo: any;
+declare let window: any;
 
 @Component({
     selector: 'page-home',
     templateUrl: 'home.html'
 })
 export class HomePage {
-    public logString: string = "Empty";
+    public logString: string = "No logs yet...";
 
     public cameraPreviewOptions: CameraPreviewOptions = {
         x: 0,
@@ -32,50 +33,38 @@ export class HomePage {
         this.loadCameraPreview();
 
         document.addEventListener("deviceready", function () {
-            captuvo.registerScannerCallback(function (barcode) {
-                this.logString = `Barcode scanned: ${ barcode }`;
-            });
-
-            captuvo.registerMagstripeCallback(function (track) {
-                //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
-                if (track.indexOf("%B") == 0) {
-                    track = track.split('^');
-
-                    let cc = {
-                        number: track[0].substr(2), //strip leading %B
-                        name: track[1].trim(),
-                        expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
-                    };
-                    
-                    this.logString = `Magstripe event. Result: ${ cc }`;
-                }
-
-            });
-
-            captuvo.startScanning(function (data) {
-                this.logString = data;
-            });
+            this.useCaptuvoDefaultEvents();
+            this.useCaptuvoWindowPluginsEvents();
+            this.useCaptuvoWindowEvents();
         });
 
         document.addEventListener("magstripeReady", function () {
-            this.logString = "MSR (or device) is ready!";
+            this.logEvent("MSR (or device) is ready!");
         });
 
         document.addEventListener("scannerReady", function () {
-            this.logString = "Barcode scanner is ready!";
+            this.logEvent("Barcode scanner is ready!");
         });
 
         document.addEventListener("captuvoConnected", function () {
-            this.logString = "Captuvo sled is connected!";
+            this.logEvent("Captuvo sled is connected!");
 
             captuvo.registerBatteryCallback(function (data) {
-                this.logString = data;
+                this.logEvent(`Start scanning: ${ data }`);
             });
         });
 
         document.addEventListener("captuvoDisconnected", function () {
-            this.logString = "Captuvo sled has been disconnected!";
+            this.logEvent("Captuvo sled has been disconnected!");
         });
+    }
+
+    private logEvent(value: string, prefix: string = ""): void {
+        if (this.logString === "No logs yet...") {
+            this.logString = "";
+        }
+
+        this.logString += `\n ${ prefix } ${ value }`;
     }
 
     private loadCameraPreview(): void {
@@ -84,7 +73,89 @@ export class HomePage {
                 console.log(res)
             },
             (err) => {
+                this.logEvent(err, "[Cordova Camera Preview Error]");
                 console.log(err)
             });
+    }
+
+    private useCaptuvoDefaultEvents(): void {
+        const logPrefix: string = "[Captuvo]";
+
+        captuvo.registerScannerCallback(function (barcode) {
+            this.logEvent(`Barcode scanned: ${ barcode }`, logPrefix);
+        });
+
+        captuvo.registerMagstripeCallback(function (track) {
+            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            if (track.indexOf("%B") == 0) {
+                track = track.split('^');
+
+                let result = {
+                    number: track[0].substr(2), //strip leading %B
+                    name: track[1].trim(),
+                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                };
+                
+                this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
+            }
+        });
+
+        captuvo.startScanning(function (data) {
+            this.logEvent(`Start scanning: ${ data }`, logPrefix);
+        });
+    }
+
+    private useCaptuvoWindowPluginsEvents(): void {
+        const logPrefix: string = "[Captuvo Window Plugins]";
+
+        window.plugins.captuvo.registerScannerCallback(function (barcode) {
+            this.logEvent(`Barcode scanned: ${ barcode }`, logPrefix);
+        });
+
+        window.plugins.captuvo.registerMagstripeCallback(function (track) {
+            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            if (track.indexOf("%B") == 0) {
+                track = track.split('^');
+
+                let result = {
+                    number: track[0].substr(2), //strip leading %B
+                    name: track[1].trim(),
+                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                };
+                
+                this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
+            }
+        });
+
+        window.plugins.captuvo.startScanning(function (data) {
+            this.logEvent(`Start scanning: ${ data }`, logPrefix);
+        });
+    }
+
+    private useCaptuvoWindowEvents(): void {
+        const logPrefix: string = "[Captuvo Window]";
+
+        window.captuvo.registerScannerCallback(function (barcode) {
+            this.logEvent(`Barcode scanned: ${ barcode }`, logPrefix);
+        });
+
+        window.captuvo.registerMagstripeCallback(function (track) {
+            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            if (track.indexOf("%B") == 0) {
+                track = track.split('^');
+
+                let result = {
+                    number: track[0].substr(2), //strip leading %B
+                    name: track[1].trim(),
+                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                };
+                
+                this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
+            }
+        });
+
+        window.captuvo.startScanning(function (data) {
+            this.logEvent(`Start scanning: ${ data }`, logPrefix);
+        });
     }
 }
