@@ -33,7 +33,7 @@ export class HomePage {
 
         document.addEventListener("deviceready", function () {
             captuvo.registerScannerCallback(function (barcode) {
-                this.logString += `\nBarcode scanned: ${ barcode }`;
+                this.logEvent(`Barcode scanned: ${ barcode }`);
             });
 
             captuvo.registerMagstripeCallback(function (track) {
@@ -41,40 +41,39 @@ export class HomePage {
                 if (track.indexOf("%B") == 0) {
                     track = track.split('^');
 
-                    let cc = {
+                    let result = {
                         number: track[0].substr(2), //strip leading %B
                         name: track[1].trim(),
                         expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
                     };
                     
-                    this.logString += `\nMagstripe event. Result: ${ cc }`;
+                    this.logEvent(`Magstripe event. Result: ${ result }`);
                 }
-
             });
 
             captuvo.startScanning(function (data) {
-                this.logString += `\nStart scanning: ${ data }`;
+                this.logEvent(`Start scanning: ${ data }`);
             });
         });
 
         document.addEventListener("magstripeReady", function () {
-            this.logString += "\nMSR (or device) is ready!";
+            this.logEvent("MSR (or device) is ready!");
         });
 
         document.addEventListener("scannerReady", function () {
-            this.logString += "\nBarcode scanner is ready!";
+            this.logEvent("Barcode scanner is ready!");
         });
 
         document.addEventListener("captuvoConnected", function () {
-            this.logString += "\nCaptuvo sled is connected!";
+            this.logEvent("Captuvo sled is connected!");
 
             captuvo.registerBatteryCallback(function (data) {
-                this.logString += `\nStart scanning: ${ data }`;
+                this.logEvent(`Start scanning: ${ data }`);
             });
         });
 
         document.addEventListener("captuvoDisconnected", function () {
-            this.logString += "\nCaptuvo sled has been disconnected!";
+            this.logEvent("Captuvo sled has been disconnected!");
         });
     }
 
@@ -86,5 +85,13 @@ export class HomePage {
             (err) => {
                 console.log(err)
             });
+    }
+
+    private logEvent(value: string): void {
+        if (this.logString === "") {
+            this.logString = "";
+        }
+
+        this.logString += `\n${ value }`;
     }
 }
