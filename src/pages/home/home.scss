@@ -14,10 +14,13 @@ page-home {
         min-height: 200px;
         background-color: #48B3A1;
         color: #222222;
-        padding: 5px;
+        padding: 10px;
 
         .log-string {
+            white-space: pre-line;
             margin-top: 15px;
+            overflow: auto;
+            height: 200px;
         }
 
         .log-title-string {

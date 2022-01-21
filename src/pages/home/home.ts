@@ -9,7 +9,7 @@ declare let captuvo: any;
     templateUrl: 'home.html'
 })
 export class HomePage {
-    public logString: string = "Empty";
+    public logString: string = "No logs yet...";
 
     public cameraPreviewOptions: CameraPreviewOptions = {
         x: 0,
@@ -33,7 +33,7 @@ export class HomePage {
 
         document.addEventListener("deviceready", function () {
             captuvo.registerScannerCallback(function (barcode) {
-                this.logString = `Barcode scanned: ${ barcode }`;
+                this.logString += `\nBarcode scanned: ${ barcode }`;
             });
 
             captuvo.registerMagstripeCallback(function (track) {
@@ -47,34 +47,34 @@ export class HomePage {
                         expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
                     };
                     
-                    this.logString = `Magstripe event. Result: ${ cc }`;
+                    this.logString += `\nMagstripe event. Result: ${ cc }`;
                 }
 
             });
 
             captuvo.startScanning(function (data) {
-                this.logString = data;
+                this.logString += `\nStart scanning: ${ data }`;
             });
         });
 
         document.addEventListener("magstripeReady", function () {
-            this.logString = "MSR (or device) is ready!";
+            this.logString += "\nMSR (or device) is ready!";
         });
 
         document.addEventListener("scannerReady", function () {
-            this.logString = "Barcode scanner is ready!";
+            this.logString += "\nBarcode scanner is ready!";
         });
 
         document.addEventListener("captuvoConnected", function () {
-            this.logString = "Captuvo sled is connected!";
+            this.logString += "\nCaptuvo sled is connected!";
 
             captuvo.registerBatteryCallback(function (data) {
-                this.logString = data;
+                this.logString += `\nStart scanning: ${ data }`;
             });
         });
 
         document.addEventListener("captuvoDisconnected", function () {
-            this.logString = "Captuvo sled has been disconnected!";
+            this.logString += "\nCaptuvo sled has been disconnected!";
         });
     }
 
