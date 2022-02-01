@@ -26,11 +26,13 @@ document.addEventListener("deviceready", function () {
     let element = document.getElementById("log-text");
     let text = document.createTextNode("\n[AppComponent] Device is ready");
     element.appendChild(text);
+    element.scrollTop = element.scrollHeight;
 
     captuvo.registerScannerCallback(function (barcode) {
         let element = document.getElementById("log-text");
         let text = document.createTextNode(`\n[AppComponent] Barcode scanned: ${ barcode }`);
         element.appendChild(text);
+        element.scrollTop = element.scrollHeight;
     });
 
     captuvo.registerMagstripeCallback(function (track) {
@@ -47,6 +49,7 @@ document.addEventListener("deviceready", function () {
             let element = document.getElementById("log-text");
             let text = document.createTextNode(`\n[AppComponent] Magstripe event. Result: ${ result }`);
             element.appendChild(text);
+            element.scrollTop = element.scrollHeight;
         }
     });
 
@@ -54,6 +57,7 @@ document.addEventListener("deviceready", function () {
         let element = document.getElementById("log-text");
         let text = document.createTextNode(`\n[AppComponent] Start scanning: ${ data }`);
         element.appendChild(text);
+        element.scrollTop = element.scrollHeight;
     });
 });
 
@@ -61,23 +65,27 @@ document.addEventListener("magstripeReady", function () {
     let element = document.getElementById("log-text");
     let text = document.createTextNode("\n[AppComponent] MSR (or device) is ready!");
     element.appendChild(text);
+    element.scrollTop = element.scrollHeight;
 });
 
 document.addEventListener("scannerReady", function () {
     let element = document.getElementById("log-text");
     let text = document.createTextNode("\n[AppComponent] Barcode scanner is ready!");
     element.appendChild(text);
+    element.scrollTop = element.scrollHeight;
 });
 
 document.addEventListener("captuvoConnected", function () {
     let element = document.getElementById("log-text");
     let text = document.createTextNode("\n[AppComponent] Captuvo sled is connected!");
     element.appendChild(text);
+    element.scrollTop = element.scrollHeight;
 
     captuvo.registerBatteryCallback(function (data) {
         let element = document.getElementById("log-text");
         let text = document.createTextNode(`\n[AppComponent] Start scanning: ${ data }`);
         element.appendChild(text);
+        element.scrollTop = element.scrollHeight;
     });
 });
 
@@ -85,4 +93,5 @@ document.addEventListener("captuvoDisconnected", function () {
     let element = document.getElementById("log-text");
     let text = document.createTextNode("\n[AppComponent] Captuvo sled has been disconnected!");
     element.appendChild(text);
+    element.scrollTop = element.scrollHeight;
 });

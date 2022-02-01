@@ -19,8 +19,8 @@ page-home {
         .log-string {
             white-space: pre-line;
             margin-top: 15px;
-            overflow: auto;
-            height: 400px;
+            overflow: scroll;
+            height: 420px;
         }
 
         .log-title-string {
