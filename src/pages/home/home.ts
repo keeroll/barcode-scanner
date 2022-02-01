@@ -29,16 +29,9 @@ export class HomePage {
     constructor(public navCtrl: NavController,
         private cameraPreview: CameraPreview) { }
 
+    // so captuvo doesn't work inside the page, need to think what to do with that
     public ngOnInit(): void {
         this.loadCameraPreview();
-
-        // try to listen plugin events directly
-        // this.useCaptuvoDefaultEvents();
-        // this.useCaptuvoWindowPluginsEvents();
-        // this.useCaptuvoWindowEvents();
-        // this.useCaptuvoFullNameDefaultEvents();
-        // this.useCaptuvoWindowFullNamePluginsEvents();
-        // this.useCaptuvoFullNameWindowEvents();
         
         // listen document an window events
         this.listenDocumentEvents();
