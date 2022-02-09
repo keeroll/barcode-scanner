@@ -1,41 +1,55 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { CameraPreview, CameraPreviewOptions } from '@awesome-cordova-plugins/camera-preview/ngx';
+import { Component } from "@angular/core";
+import { NavController } from "ionic-angular";
+import { Camera, CameraOptions } from "@ionic-native/camera/ngx";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 declare var captuvo: any;
 declare var window: any;
 
 @Component({
-    selector: 'page-home',
-    templateUrl: 'home.html'
+    selector: "page-home",
+    templateUrl: "home.html"
 })
 export class HomePage {
     public logString: string = "No logs yet...";
-
-    public cameraPreviewOptions: CameraPreviewOptions = {
-        x: 0,
-        y: 0,
-        width: window.screen.width,
-        height: window.screen.height,
-        camera: 'rear',
-        tapPhoto: false,
-        previewDrag: false,
-        toBack: false,
-        alpha: 1,
-        tapFocus: false,
-        disableExifHeaderStripping: false
-    };
+    public photo: string = "";
+    public showLogs: boolean = false;
 
     constructor(public navCtrl: NavController,
-        private cameraPreview: CameraPreview) { }
+                private camera: Camera,
+                private sanitizer: DomSanitizer) { }
 
-    // so captuvo doesn't work inside the page, need to think what to do with that
+    public get shopSetupSafeUrl(): SafeResourceUrl {
+        return this.sanitizer.bypassSecurityTrustResourceUrl("https://app-aadpillar-dev-shopsetupweb.azurewebsites.net");
+    }
+
+    // so captuvo doesn"t work inside the page, need to think what to do with that
     public ngOnInit(): void {
-        this.loadCameraPreview();
-        
-        // listen document an window events
+        // listen document and window events
         this.listenDocumentEvents();
         this.listenWindowEvents(); 
+    }
+
+    public toggleLogs(): void {
+        this.showLogs = !this.showLogs;
+    }
+
+    public takePicture(): void {
+        const options: CameraOptions = {
+            quality: 100,
+            destinationType: this.camera.DestinationType.FILE_URI,
+            encodingType: this.camera.EncodingType.JPEG,
+            mediaType: this.camera.MediaType.PICTURE
+        };
+
+        this.camera.getPicture(options).then((imageData) => {
+            // imageData is either a base64 encoded string or a file URI
+            // If it"s base64 (DATA_URL):
+            let base64Image = "data:image/jpeg;base64," + imageData;
+            this.photo = base64Image;
+        }, (error) => {
+            console.error(error);
+        });
     }
 
     public listenDocumentEvents(): void {
@@ -116,17 +130,6 @@ export class HomePage {
         this.logString += `\n ${ prefix } ${ value }`;
     }
 
-    public loadCameraPreview(): void {
-        this.cameraPreview.startCamera(this.cameraPreviewOptions).then(
-            (res) => {
-                console.log(res)
-            },
-            (err) => {
-                this.logEvent(err, "[Cordova Camera Preview Error]");
-                console.log(err)
-            });
-    }
-
     public useCaptuvoDefaultEvents(): void {
         const logPrefix: string = "[Captuvo]";
 
@@ -135,14 +138,14 @@ export class HomePage {
         });
 
         captuvo.registerMagstripeCallback(function (track) {
-            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            //track 1 uses carets as dividers (NOTE: won"t work if track 2 is read)
             if (track.indexOf("%B") == 0) {
-                track = track.split('^');
+                track = track.split("^");
 
                 let result = {
                     number: track[0].substr(2), //strip leading %B
                     name: track[1].trim(),
-                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                    expr: "20" + track[2].substr(0, 2) + "-" + track[2].substr(2, 2)
                 };
                 
                 this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
@@ -162,14 +165,14 @@ export class HomePage {
         });
 
         window.plugins.captuvo.registerMagstripeCallback(function (track) {
-            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            //track 1 uses carets as dividers (NOTE: won"t work if track 2 is read)
             if (track.indexOf("%B") == 0) {
-                track = track.split('^');
+                track = track.split("^");
 
                 let result = {
                     number: track[0].substr(2), //strip leading %B
                     name: track[1].trim(),
-                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                    expr: "20" + track[2].substr(0, 2) + "-" + track[2].substr(2, 2)
                 };
                 
                 this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
@@ -189,14 +192,14 @@ export class HomePage {
         });
 
         window.captuvo.registerMagstripeCallback(function (track) {
-            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            //track 1 uses carets as dividers (NOTE: won"t work if track 2 is read)
             if (track.indexOf("%B") == 0) {
-                track = track.split('^');
+                track = track.split("^");
 
                 let result = {
                     number: track[0].substr(2), //strip leading %B
                     name: track[1].trim(),
-                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                    expr: "20" + track[2].substr(0, 2) + "-" + track[2].substr(2, 2)
                 };
                 
                 this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
@@ -216,14 +219,14 @@ export class HomePage {
         });
 
         captuvo.com.bluefletch.honeywell.captuvo.registerMagstripeCallback(function (track) {
-            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            //track 1 uses carets as dividers (NOTE: won"t work if track 2 is read)
             if (track.indexOf("%B") == 0) {
-                track = track.split('^');
+                track = track.split("^");
 
                 let result = {
                     number: track[0].substr(2), //strip leading %B
                     name: track[1].trim(),
-                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                    expr: "20" + track[2].substr(0, 2) + "-" + track[2].substr(2, 2)
                 };
                 
                 this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
@@ -243,14 +246,14 @@ export class HomePage {
         });
 
         window.plugins.com.bluefletch.honeywell.captuvo.registerMagstripeCallback(function (track) {
-            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            //track 1 uses carets as dividers (NOTE: won"t work if track 2 is read)
             if (track.indexOf("%B") == 0) {
-                track = track.split('^');
+                track = track.split("^");
 
                 let result = {
                     number: track[0].substr(2), //strip leading %B
                     name: track[1].trim(),
-                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                    expr: "20" + track[2].substr(0, 2) + "-" + track[2].substr(2, 2)
                 };
                 
                 this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
@@ -270,14 +273,14 @@ export class HomePage {
         });
 
         window.com.bluefletch.honeywell.captuvo.registerMagstripeCallback(function (track) {
-            //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+            //track 1 uses carets as dividers (NOTE: won"t work if track 2 is read)
             if (track.indexOf("%B") == 0) {
-                track = track.split('^');
+                track = track.split("^");
 
                 let result = {
                     number: track[0].substr(2), //strip leading %B
                     name: track[1].trim(),
-                    expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+                    expr: "20" + track[2].substr(0, 2) + "-" + track[2].substr(2, 2)
                 };
                 
                 this.logEvent(`Magstripe event. Result: ${ result }`, logPrefix);
@@ -289,8 +292,6 @@ export class HomePage {
         });
     }
 }
-
-
 
 // document.addEventListener("deviceready", function () {
 //     let element = document.getElementById("log-text");
@@ -304,14 +305,14 @@ export class HomePage {
 //     });
 
 //     captuvo.registerMagstripeCallback(function (track) {
-//         //track 1 uses carets as dividers (NOTE: won't work if track 2 is read)
+//         //track 1 uses carets as dividers (NOTE: won"t work if track 2 is read)
 //         if (track.indexOf("%B") == 0) {
-//             track = track.split('^');
+//             track = track.split("^");
 
 //             let result = {
 //                 number: track[0].substr(2), //strip leading %B
 //                 name: track[1].trim(),
-//                 expr: '20' + track[2].substr(0, 2) + '-' + track[2].substr(2, 2)
+//                 expr: "20" + track[2].substr(0, 2) + "-" + track[2].substr(2, 2)
 //             };
 
 //             let element = document.getElementById("log-text");

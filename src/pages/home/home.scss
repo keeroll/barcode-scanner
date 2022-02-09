@@ -7,6 +7,27 @@ page-home {
         justify-content: flex-end;
     }
 
+    .iframe-container {
+        width: 100%;
+        height: 100%;
+        padding: 5px 0;
+    }
+
+    .btn-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        padding: 5px;
+
+        .btn {
+            width: 50%;
+            height: 50px;
+            margin: 0 10px;
+        }
+    }
+
+    
+
     .logs {
         display: flex;
         flex-direction: column;
@@ -20,7 +41,7 @@ page-home {
             white-space: pre-line;
             margin-top: 15px;
             overflow: scroll;
-            height: 420px;
+            height: 500px;
         }
 
         .log-title-string {

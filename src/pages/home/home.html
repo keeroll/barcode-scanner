@@ -8,7 +8,7 @@
 
 <ion-content padding>
     <div class="content">
-        <div class="logs">
+        <div class="logs" [hidden]="!showLogs">
             <h4 class="log-title-string">
                 Logs here:
             </h4>
@@ -16,5 +16,23 @@
                 {{ logString }}
             </h6>
         </div>
+        <div class="iframe-container" [hidden]="showLogs">
+            <!-- <object data="https://github.com" width="600" height="400">
+                <embed src="https://github.com" width="600" height="400"/>
+            </object> -->
+            <iframe id="shop-setup-frame" [src]="shopSetupSafeUrl" class="frame" width="100%" height="100%"> 
+            </iframe>
+        </div>
+        
+        <div class="btn-container">
+            <button class="btn" (click)="toggleLogs()">
+                Logs
+            </button>
+            <button class="btn" (click)="takePicture()">
+                Photo
+            </button>
+        </div>
+        
+         <!-- <img [src]="photo" /> -->
     </div>
 </ion-content>
