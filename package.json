@@ -21,6 +21,7 @@
     "@angular/platform-browser": "5.2.11",
     "@angular/platform-browser-dynamic": "5.2.11",
     "@awesome-cordova-plugins/core": "^5.37.3",
+    "@awesome-cordova-plugins/camera": "^5.39.0",
     "@ionic-native/camera": "^5.36.0",
     "@ionic-native/core": "4.20.0",
     "@ionic-native/splash-screen": "4.20.0",
@@ -34,7 +35,6 @@
     "zone.js": "0.8.29"
   },
   "devDependencies": {
-    "@awesome-cordova-plugins/camera": "^5.39.1",
     "@ionic/app-scripts": "3.2.4",
     "CaptuvoCDV": "git+https://github.com/BlueFletch/cordova-plugin-honeywell-captuvo.git",
     "cordova-plugin-camera": "^6.0.0",

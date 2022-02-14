@@ -31,6 +31,9 @@ export class HomePage {
 
     public get shopSetupSafeUrl(): SafeResourceUrl {
         // return this.sanitizer.bypassSecurityTrustResourceUrl("https://www.youtube.com/embed/dQw4w9WgXcQ");
+
+        // return this.sanitizer.bypassSecurityTrustResourceUrl("http://localhost:4200/login");
+
         return this.sanitizer.bypassSecurityTrustResourceUrl("https://app-aadpillar-dev-shopsetupweb.azurewebsites.net/index");
     }
 
@@ -65,7 +68,8 @@ export class HomePage {
                 quality: 100,
                 destinationType: this.camera.DestinationType.FILE_URI,
                 encodingType: this.camera.EncodingType.JPEG,
-                mediaType: this.camera.MediaType.PICTURE
+                mediaType: this.camera.MediaType.PICTURE,
+                sourceType: this.camera.PictureSourceType.CAMERA
             };
     
             this.camera.getPicture(options).then((imageData) => {
@@ -90,12 +94,13 @@ export class HomePage {
         try {
             const options: AwesomeCameraOptions = {
                 quality: 100,
-                destinationType: this.camera.DestinationType.FILE_URI,
-                encodingType: this.camera.EncodingType.JPEG,
-                mediaType: this.camera.MediaType.PICTURE
+                destinationType: this.awesomeCamera.DestinationType.FILE_URI,
+                encodingType: this.awesomeCamera.EncodingType.JPEG,
+                mediaType: this.awesomeCamera.MediaType.PICTURE,
+                sourceType: this.awesomeCamera.PictureSourceType.CAMERA
             };
     
-            this.camera.getPicture(options).then((imageData) => {
+            this.awesomeCamera.getPicture(options).then((imageData) => {
                 // imageData is either a base64 encoded string or a file URI
                 // If it's base64 (DATA_URL):
                 let base64Image = 'data:image/jpeg;base64,' + imageData;

@@ -19,12 +19,24 @@
         </div>
 
         <div class="iframe-container" [hidden]="!showIframe">
-            <!-- <object data="https://github.com" width="600" height="400">
-                <embed src="https://github.com" width="600" height="400"/>
+            <!-- <object data="https://app-aadpillar-dev-shopsetupweb.azurewebsites.net" width="600" height="400">
+                <embed src="https://app-aadpillar-dev-shopsetupweb.azurewebsites.net" width="600" height="400"/>
             </object> -->
             <iframe id="shop-setup-frame" allow="geolocation" [src]="shopSetupSafeUrl"  width="100%" height="100%"> 
             </iframe>
+            <!-- <object type="text/html" data="https://app-aadpillar-dev-shopsetupweb.azurewebsites.net" width="800px" height="600px">
+            </object> -->
         </div>
+
+        <!-- <div class="iframe-container" [hidden]="!showIframe">
+            <object data="http://localhost:4200/" width="600" height="400">
+                <embed src="http://localhost:4200/" width="600" height="400"/>
+            </object>
+            <iframe id="shop-setup-frame" allow="geolocation" [src]="shopSetupSafeUrl"  width="100%" height="100%" sanbox> 
+            </iframe>
+            <object type="text/html" data="http://localhost:4200/" width="800px" height="600px">
+            </object>
+        </div> -->
 
         <div class="camera-container" *ngIf="cameraIsOpen" [hidden]="showLogs">
             <div class="camera" [hidden]="!showCamera1">
