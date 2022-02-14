@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { NavController } from "ionic-angular";
 import { Camera, CameraOptions } from "@ionic-native/camera/ngx";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { Camera as AwesomeCamera, CameraOptions as AwesomeCameraOptions} from "@awesome-cordova-plugins/camera/ngx";
 
 declare var captuvo: any;
 declare var window: any;
@@ -12,15 +13,37 @@ declare var window: any;
 })
 export class HomePage {
     public logString: string = "No logs yet...";
-    public photo: string = "";
+
+    public photo1: string;
+    public photo2: string;
+    public photo3: string;
+
     public showLogs: boolean = false;
+
+    public showCamera1: boolean = false;
+    public showCamera2: boolean = false;
+    public showCamera3: boolean = false;
 
     constructor(public navCtrl: NavController,
                 private camera: Camera,
-                private sanitizer: DomSanitizer) { }
+                private sanitizer: DomSanitizer,
+                private awesomeCamera: AwesomeCamera) { }
 
     public get shopSetupSafeUrl(): SafeResourceUrl {
-        return this.sanitizer.bypassSecurityTrustResourceUrl("https://app-aadpillar-dev-shopsetupweb.azurewebsites.net");
+        // return this.sanitizer.bypassSecurityTrustResourceUrl("https://www.youtube.com/embed/dQw4w9WgXcQ");
+        return this.sanitizer.bypassSecurityTrustResourceUrl("https://app-aadpillar-dev-shopsetupweb.azurewebsites.net/index");
+    }
+
+    public get cameraIsOpen(): boolean {
+        return this.showCamera1 || this.showCamera2 || this.showCamera3;
+    }
+
+    public get showIframe(): boolean {
+        return !this.cameraIsOpen && !this.showLogs;
+    }
+
+    public get logsBtnTitle(): string {
+        return !this.showLogs ? "Logs" : "Close logs";
     }
 
     // so captuvo doesn"t work inside the page, need to think what to do with that
@@ -34,22 +57,93 @@ export class HomePage {
         this.showLogs = !this.showLogs;
     }
 
-    public takePicture(): void {
-        const options: CameraOptions = {
-            quality: 100,
-            destinationType: this.camera.DestinationType.FILE_URI,
-            encodingType: this.camera.EncodingType.JPEG,
-            mediaType: this.camera.MediaType.PICTURE
-        };
+    public takePicture1(): void {
+        const prefix: string = "[@IN Camera]";
 
-        this.camera.getPicture(options).then((imageData) => {
-            // imageData is either a base64 encoded string or a file URI
-            // If it"s base64 (DATA_URL):
-            let base64Image = "data:image/jpeg;base64," + imageData;
-            this.photo = base64Image;
-        }, (error) => {
-            console.error(error);
-        });
+        try {
+            const options: CameraOptions = {
+                quality: 100,
+                destinationType: this.camera.DestinationType.FILE_URI,
+                encodingType: this.camera.EncodingType.JPEG,
+                mediaType: this.camera.MediaType.PICTURE
+            };
+    
+            this.camera.getPicture(options).then((imageData) => {
+                // imageData is either a base64 encoded string or a file URI
+                // If it"s base64 (DATA_URL):
+                let base64Image = "data:image/jpeg;base64," + imageData;
+                this.photo1 = base64Image;
+            }, (error) => {
+                console.error(error);
+                this.logEvent(error, prefix);
+            });
+        } catch(ex) {
+            console.error(ex);
+            this.logEvent(ex, prefix);
+        }
+        
+    }
+
+    public takePicture2(): void {
+        const prefix: string = "[@ACP Camera]";
+
+        try {
+            const options: AwesomeCameraOptions = {
+                quality: 100,
+                destinationType: this.camera.DestinationType.FILE_URI,
+                encodingType: this.camera.EncodingType.JPEG,
+                mediaType: this.camera.MediaType.PICTURE
+            };
+    
+            this.camera.getPicture(options).then((imageData) => {
+                // imageData is either a base64 encoded string or a file URI
+                // If it's base64 (DATA_URL):
+                let base64Image = 'data:image/jpeg;base64,' + imageData;
+                this.photo2 = base64Image;
+            }, (error) => {
+                console.error(error);
+                this.logEvent(error, prefix);
+            });
+        } catch (ex) {
+            console.error(ex);
+            this.logEvent(ex, prefix);
+        }   
+    }
+
+    public takePicture3(): void {
+        // const options: CameraOptions = {
+        //     quality: 100,
+        //     destinationType: this.camera.DestinationType.FILE_URI,
+        //     encodingType: this.camera.EncodingType.JPEG,
+        //     mediaType: this.camera.MediaType.PICTURE
+        // };
+
+        // this.camera.getPicture(options).then((imageData) => {
+        //     // imageData is either a base64 encoded string or a file URI
+        //     // If it"s base64 (DATA_URL):
+        //     let base64Image = "data:image/jpeg;base64," + imageData;
+        //     this.photo3 = base64Image;
+        // }, (error) => {
+        //     console.error(error);
+        // });
+    }
+
+    public closeCameraLayout(): void {
+        this.showCamera1 = false;
+        this.showCamera2 = false;
+        this.showCamera3 = false;
+    }
+
+    public openCamera1(): void {
+        this.showCamera1 = true;
+    }
+
+    public openCamera2(): void {
+        this.showCamera2 = true;
+    }
+
+    public openCamera3(): void {
+        this.showCamera3 = true;
     }
 
     public listenDocumentEvents(): void {
@@ -128,6 +222,9 @@ export class HomePage {
         }
 
         this.logString += `\n ${ prefix } ${ value }`;
+
+        let element = document.getElementById("log-text");
+        element.scrollTop = element.scrollHeight;
     }
 
     public useCaptuvoDefaultEvents(): void {

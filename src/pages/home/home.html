@@ -8,6 +8,7 @@
 
 <ion-content padding>
     <div class="content">
+
         <div class="logs" [hidden]="!showLogs">
             <h4 class="log-title-string">
                 Logs here:
@@ -16,21 +17,64 @@
                 {{ logString }}
             </h6>
         </div>
-        <div class="iframe-container" [hidden]="showLogs">
+
+        <div class="iframe-container" [hidden]="!showIframe">
             <!-- <object data="https://github.com" width="600" height="400">
                 <embed src="https://github.com" width="600" height="400"/>
             </object> -->
-            <iframe id="shop-setup-frame" [src]="shopSetupSafeUrl" class="frame" width="100%" height="100%"> 
+            <iframe id="shop-setup-frame" allow="geolocation" [src]="shopSetupSafeUrl"  width="100%" height="100%"> 
             </iframe>
+        </div>
+
+        <div class="camera-container" *ngIf="cameraIsOpen" [hidden]="showLogs">
+            <div class="camera" [hidden]="!showCamera1">
+                <img [src]="photo1" />
+                <div class="btn-container">
+                    <button class="btn" (click)="takePicture1()">
+                        Take a picture
+                    </button>
+                    <button class="btn" (click)="closeCameraLayout()">
+                        Close
+                    </button>
+                </div>
+            </div>
+            <div class="camera" [hidden]="!showCamera2">
+                <img [src]="photo2" />
+                <div class="btn-container">
+                    <button class="btn" (click)="takePicture2()">
+                        Take a picture
+                    </button>
+                    <button class="btn" (click)="closeCameraLayout()">
+                        Close
+                    </button>
+                </div>
+            </div>
+            <div class="camera" [hidden]="!showCamera3">
+                <img [src]="photo3" />
+                <div class="btn-container">
+                    <button class="btn" (click)="takePicture3()">
+                        Take a picture
+                    </button>
+                    <button class="btn" (click)="closeCameraLayout()">
+                        Close
+                    </button>
+                </div>
+            </div>
         </div>
         
         <div class="btn-container">
             <button class="btn" (click)="toggleLogs()">
-                Logs
+                {{ logsBtnTitle }}
             </button>
-            <button class="btn" (click)="takePicture()">
-                Photo
+            <button class="btn" (click)="openCamera1()" *ngIf="!cameraIsOpen">
+                Cam 1
             </button>
+            <button class="btn" (click)="openCamera2()" *ngIf="!cameraIsOpen">
+                Cam 2
+            </button>
+            <!-- <button class="btn" (click)="openCamera3()" *ngIf="!cameraIsOpen">
+                Cam 3
+            </button> -->
         </div>
         
          <!-- <img [src]="photo" /> -->
